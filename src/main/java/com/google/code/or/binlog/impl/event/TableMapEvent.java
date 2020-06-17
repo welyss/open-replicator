@@ -1,18 +1,16 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.google.code.or.binlog.impl.event;
 
@@ -27,20 +25,21 @@ import com.google.code.or.common.util.MySQLConstants;
 import com.google.code.or.common.util.ToStringBuilder;
 
 /**
- * Used for row-based binary logging. This event precedes each row operation event. 
- * It maps a table definition to a number, where the table definition consists of 
- * database and table names and column definitions. The purpose of this event is to 
- * enable replication when a table has different definitions on the master and slave. 
- * Row operation events that belong to the same transaction may be grouped into sequences, 
- * in which case each such sequence of events begins with a sequence of TABLE_MAP_EVENT events: 
- * one per table used by events in the sequence. 
+ * Used for row-based binary logging. This event precedes each row operation event. It maps a table
+ * definition to a number, where the table definition consists of database and table names and
+ * column definitions. The purpose of this event is to enable replication when a table has different
+ * definitions on the master and slave. Row operation events that belong to the same transaction may
+ * be grouped into sequences, in which case each such sequence of events begins with a sequence of
+ * TABLE_MAP_EVENT events: one per table used by events in the sequence.
  * 
  * @author Jingqi Xu
  */
 public final class TableMapEvent extends AbstractBinlogEventV4 {
+	private static final long serialVersionUID = -8115026727547190289L;
+
 	//
 	public static final int EVENT_TYPE = MySQLConstants.TABLE_MAP_EVENT;
-	
+
 	//
 	private long tableId;
 	private int reserved;
@@ -53,37 +52,31 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 	private UnsignedLong columnMetadataCount;
 	private Metadata columnMetadata;
 	private BitColumn columnNullabilities;
-	
+
 	/**
 	 * 
 	 */
-	public TableMapEvent() {
-	}
-	
+	public TableMapEvent() {}
+
 	public TableMapEvent(BinlogEventV4Header header) {
 		this.header = header;
 	}
-	
+
 	/**
 	 * 
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-		.append("header", header)
-		.append("tableId", tableId)
-		.append("reserved", reserved)
-		.append("databaseNameLength", databaseNameLength)
-		.append("databaseName", databaseName)
-		.append("tableNameLength", tableNameLength)
-		.append("tableName", tableName)
-		.append("columnCount", columnCount)
-		.append("columnTypes", Arrays.toString(columnTypes))
-		.append("columnMetadataCount", columnMetadataCount)
-		.append("columnMetadata", columnMetadata)
-		.append("columnNullabilities", columnNullabilities).toString();
+		return new ToStringBuilder(this).append("header", header).append("tableId", tableId)
+				.append("reserved", reserved).append("databaseNameLength", databaseNameLength)
+				.append("databaseName", databaseName).append("tableNameLength", tableNameLength)
+				.append("tableName", tableName).append("columnCount", columnCount)
+				.append("columnTypes", Arrays.toString(columnTypes))
+				.append("columnMetadataCount", columnMetadataCount)
+				.append("columnMetadata", columnMetadata)
+				.append("columnNullabilities", columnNullabilities).toString();
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -103,7 +96,7 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 		r.setColumnNullabilities(this.columnNullabilities);
 		return r;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -186,7 +179,7 @@ public final class TableMapEvent extends AbstractBinlogEventV4 {
 	public void setColumnMetadata(Metadata columnMetadata) {
 		this.columnMetadata = columnMetadata;
 	}
-	
+
 	public BitColumn getColumnNullabilities() {
 		return columnNullabilities;
 	}
