@@ -106,34 +106,34 @@ public class XInputStreamImpl extends InputStream implements XInputStream {
     return r;
   }
 
-	public byte[] readBytesForBlob(int length, XChecksum checksum) throws IOException {
-		final byte[] r = new byte[length];
-		if (this.readLimit > 0 && (this.readCount + length) > this.readLimit) {
-			int offset = this.readLimit - this.readCount;
-			doRead(r, 0, offset, checksum);
-			int left = length - offset;
-			int loopCnt = left / this.readLimit;
-			int mod = left % this.readLimit;
-			if (mod > 0) {
-				loopCnt++;
-			}
-			long lastPackageSize = this.readCount;
-			for (int i = 0; i < loopCnt; i++) {
-				lastPackageSize = readInt(3);
-				skip(1);
-				if (i == loopCnt - 1) {
-					doRead(r, offset, mod, checksum);
-				} else {
-					doRead(r, offset += (this.readLimit), this.readLimit - 4, checksum);
-				}
-			}
-			this.readCount = this.readLimit - (int) (lastPackageSize - (long) mod);
-		} else {
-			this.readCount += this.read(r, 0, length, checksum);
+  public byte[] readBytesForBlob(int length, XChecksum checksum) throws IOException {
+	final byte[] r = new byte[length];
+	if (this.readLimit > 0 && (this.readCount + length) > this.readLimit) {
+		int offset = this.readLimit - this.readCount;
+		doRead(r, 0, offset, checksum);
+		int left = length - offset;
+		int loopCnt = left / this.readLimit;
+		int mod = left % this.readLimit;
+		if (mod > 0) {
+			loopCnt++;
 		}
-		return r;
+		long lastPackageSize = this.readCount;
+		for (int i = 0; i < loopCnt; i++) {
+			lastPackageSize = readInt(3);
+			skip(1);
+			if (i == loopCnt - 1) {
+				doRead(r, offset, mod, checksum);
+			} else {
+				doRead(r, offset += (this.readLimit), this.readLimit - 4, checksum);
+			}
+		}
+		this.readCount = this.readLimit - (int) (lastPackageSize - (long) mod);
+	} else {
+		this.readCount += this.read(r, 0, length, checksum);
 	}
-  
+	return r;
+  }
+
   public BitColumn readBit(int length) throws IOException {
     return readBit(length, true);
   }
